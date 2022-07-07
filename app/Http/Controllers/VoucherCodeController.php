@@ -23,7 +23,7 @@ class VoucherCodeController extends Controller
     public function index()
     {
         //
-        $data = VoucherCode::get();
+        $data = VoucherCode::where("user_id", Auth::id());
         $table = Datatables::of($data);
         return $table->make(true);
         

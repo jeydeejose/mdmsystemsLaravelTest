@@ -18,4 +18,11 @@ class VoucherCode extends Model
         'updated_at',
         'deleted_at',
     ];
+
+    public function userData()
+    {
+        return $this->hasOne(User::class, "id", "user_id");
+    }
+
+
 }

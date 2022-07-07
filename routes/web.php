@@ -35,6 +35,8 @@ Route::group(['middleware' => ['role:SuperAdmin|GroupAdmin']], function () {
     Route::post('/groups/destroy', [App\Http\Controllers\GroupController::class, 'destroy']);
     Route::get('/groups/{id}/adduser/{userid}', [App\Http\Controllers\GroupController::class, 'addUser'])->name('groups.addUser');
     Route::get('/groups/{id}/removeUser/{userid}', [App\Http\Controllers\GroupController::class, 'removeUser'])->name('groups.removeUser');
+    Route::get('/groups/{id}/viewcodes/{userid}', [App\Http\Controllers\GroupController::class, 'viewCodes'])->name('groups.viewCodes');
+    Route::get('/groups/export/{id}/{type}', [App\Http\Controllers\GroupController::class, 'export'])->name('groups.export');
     Route::resource('groups', App\Http\Controllers\GroupController::class);
 
 });

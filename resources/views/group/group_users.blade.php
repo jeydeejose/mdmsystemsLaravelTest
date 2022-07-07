@@ -6,7 +6,7 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
-                    {{ __('-') }}
+                    {{ __('Group of') }} {{$nameGroup->name}}
                 </div>
 
                 <div class="card-body">
@@ -18,7 +18,7 @@
 
                     
 
-                    @hasanyrole('SuperAdmin|GroupAdmin')
+                    <!-- @hasanyrole('SuperAdmin|GroupAdmin')
                         I am a Admin!
                     @else
                         I am not a admin...
@@ -31,7 +31,7 @@
 
                     @can('add-group')
                         Add Group
-                    @endcan
+                    @endcan -->
 
                     <button class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#modal">Add Users to Group</button>
 
@@ -47,13 +47,23 @@
                         <tr>
 
                             <td>{{$user->name}}</td>
-                            <td><a href="{{route('groups.removeUser', [$id, $user->id])}}"><button class="btn btn-danger">Remove</button></a></td>
+                            <td><a href="{{route('groups.viewCodes', [$id, $user->id])}}"><button class="btn btn-primary">View codes</button></a> <a href="{{route('groups.removeUser', [$id, $user->id])}}"><button class="btn btn-danger">Remove</button></a></td>
                         </tr>
                         @endforeach
 
 
                         </tbody>
                     </table>      
+                    @hasanyrole('SuperAdmin|GroupAdmin')
+                    <div class="float-end">
+                        Export All Voucher Code: 
+                        <a href="{{route('groups.export', [0,'excel'])}}"><button type="button" class="btn btn-success">Excel</button></a>
+                        <a href="{{route('groups.export', [0,'csv'])}}"><button type="button" class="btn btn-success">CSV</button></a>
+                    </div>
+                    @endrole
+              
+
+
                     {{ $query->links() }}              
 
 
@@ -92,7 +102,6 @@
                                         </tbody>
                                     </table>  
 
-              
 
 
 

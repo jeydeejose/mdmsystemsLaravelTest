@@ -6,7 +6,7 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
-                    {{ __('-') }}
+                    {{ __('Voucher Code(s)') }}
                         <generate-voucher-component></generate-voucher-component>
            
                 </div>
@@ -18,7 +18,7 @@
                         </div>
                     @endif
 
-                    @hasanyrole('SuperAdmin|GroupAdmin')
+                    <!-- @hasanyrole('SuperAdmin|GroupAdmin')
                         I am a Admin!
                     @else
                         I am not a admin...
@@ -31,7 +31,7 @@
 
                     @can('add-group')
                         Add Group
-                    @endcan
+                    @endcan -->
 
                                        
 

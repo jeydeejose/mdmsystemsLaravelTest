@@ -6,7 +6,7 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
-                    {{ __('-') }}
+                    {{ __('Groups') }}
                 </div>
 
                 <div class="card-body">
@@ -16,24 +16,15 @@
                         </div>
                     @endif
 
-                    
-
-                    @hasanyrole('SuperAdmin|GroupAdmin')
-                        I am a Admin!
-                    @else
-                        I am not a admin...
-                    @endrole
-
-
-                    @can('group-lists')
-                        Group List
-                    @endcan  
-
-                    @can('add-group')
-                        Add Group
-                    @endcan
 
                     <group-component></group-component>
+                    @hasanyrole('SuperAdmin')
+                    <div class="float-end">
+                        Export All Voucher Code: 
+                        <a href="{{route('groups.export', [0,'excel'])}}"><button type="button" class="btn btn-success">Excel</button></a>
+                        <a href="{{route('groups.export', [0,'csv'])}}"><button type="button" class="btn btn-success">CSV</button></a>
+                    </div>
+                    @endrole
 
                                     
 

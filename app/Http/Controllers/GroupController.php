@@ -5,8 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Group;
 use App\Models\User;
+use App\Models\VoucherCode;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
+use App\Exports\VoucherCodeExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Database\Eloquent\Builder;
 
 class GroupController extends Controller
 {
@@ -85,6 +89,34 @@ class GroupController extends Controller
         return redirect('/groups/'.$id);
     }
 
+    public function viewCodes ($id, $userid)
+    {
+        $superAdmin = User::role('SuperAdmin')->where("id",Auth::id())->count();
+        $groupAdmin = User::role('GroupAdmin')->where("id",Auth::id())->count();
+
+        if($superAdmin)
+        {
+            $query = User::with("voucherData")->where("id", $userid)->where("group_id", $id)->get();
+            $user = User::where("id", $userid)->first();
+            return view('group.view_codes', compact(["id", "userid", "user", "query"]));
+        }
+        else if($groupAdmin)
+        {
+            $checkGroup = Group::where("id", $id)->where("admin_user_id", Auth::id())->count();
+            if($checkGroup)
+            {
+                $query = User::with("voucherData")->where("id", $userid)->where("group_id", $id)->get();
+                $user = User::where("id", $userid)->first();
+                return view('group.view_codes', compact(["id", "userid", "user", "query"])); 
+            } 
+            else
+            {
+                return abort(403, 'Unauthorized action.');
+            }          
+        }
+       
+        
+    }
     /**
      * Display the specified resource.
      *
@@ -100,17 +132,20 @@ class GroupController extends Controller
         {
             $query = User::where("id", "!=", Auth::id())->where("group_id", $id)->paginate(5);
             $unGroupusers = User::where("id", "!=", Auth::id())->where("group_id", 0)->get();
-            return view('group.group_users', compact(["id", "query", "unGroupusers"]));
+            $nameGroup = Group::where("id", $id)->first();
+
+            return view('group.group_users', compact(["id", "query", "nameGroup", "unGroupusers"]));
         }
         else if($groupAdmin)
         {
             $checkGroup = Group::where("id", $id)->where("admin_user_id", Auth::id())->count();
-
             if($checkGroup)
             {
                 $query = User::where("id", "!=", Auth::id())->where("group_id", $id)->paginate(5);
                 $unGroupusers = User::where("id", "!=", Auth::id())->where("group_id", 0)->get();
-                return view('group.group_users', compact(["id", "query", "unGroupusers"])); 
+
+                $nameGroup = Group::where("id", $id)->first();
+                return view('group.group_users', compact(["id", "query", "nameGroup", "unGroupusers"])); 
             } 
             else
             {
@@ -163,4 +198,33 @@ class GroupController extends Controller
         $query = Group::where('id', $request->id)->delete();
         return $query;
     }
+
+    public function export($id, $type)
+    {
+        if($type=="excel")
+        return Excel::download(new VoucherCodeExport($id), 'VoucherCode.xls');
+
+        if($type=="csv")
+        return Excel::download(new VoucherCodeExport($id), 'VoucherCode.csv');
+    }
+
+    public function export_all($type)
+    {
+        if($type=="excel")
+        return Excel::download(new VoucherCodeExport(0), 'VoucherCode.xls');
+
+        if($type=="csv")
+        return Excel::download(new VoucherCodeExport(0), 'VoucherCode.csv');
+    }
+
+
+    public function export_group($type)
+    {
+        if($type=="excel")
+        return Excel::download(new VoucherCodeExport(0), 'VoucherCode.xls');
+
+        if($type=="csv")
+        return Excel::download(new VoucherCodeExport(0), 'VoucherCode.csv');
+    }
+
 }

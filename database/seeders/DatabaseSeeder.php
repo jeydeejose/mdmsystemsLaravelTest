@@ -1,12 +1,15 @@
 <?php
 
 namespace Database\Seeders;
-
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+
+use Database\Seeders\UsersTableSeeder;
 
 class DatabaseSeeder extends Seeder
 {
+    use WithoutModelEvents;
     /**
      * Seed the application's database.
      *
@@ -20,5 +23,16 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+        $this->call([
+            UserTableSeeder::class,
+            PermissionsTableSeeder::class,
+            RolesTableSeeder::class,
+            // PermissionRoleTableSeeder::class,
+            
+            RoleUserTableSeeder::class,
+        ]);
+
+
+
     }
 }
